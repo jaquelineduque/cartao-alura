@@ -1,4 +1,5 @@
-(ns cartao.logic)
+(ns cartao.logic
+  (:import [java.time LocalDateTime]))
 
 (defn valor-por-compra
   [compra]
@@ -30,5 +31,22 @@
   [compras nome-estabelecimento]
   (->> compras
        (map :compra)
-       ;(filter #(> (:preco-total %) 500) resumo))
        (filter #(= (:estabelecimento %) nome-estabelecimento))))
+
+(defn mes-da-data
+  [data]
+  (.getMonth (LocalDateTime/parse data)))
+
+(defn compras-mensais
+  [compras mes]
+  (->> compras
+       (map :compra)
+       (filter #(= (mes-da-data (:data %)) mes))
+       )
+  )
+
+(defn total-mensal
+  [compras]
+  (->> compras
+       (map valor-por-compra)
+       (reduce +)))

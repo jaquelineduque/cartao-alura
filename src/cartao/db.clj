@@ -12,7 +12,7 @@
                         :estabelecimento "Padoca da Rosinha"
                         :categoria       :alimentacao}})
 
-(def compra3 {:cliente {:cpf   14971065083
+(def compra2 {:cliente {:cpf   14971065083
                         :nome  "Gandalf the Gray"
                         :email "gandalf.gray@shire.com"}
               :cartao  {:numero   5150920705496483
@@ -24,19 +24,32 @@
                         :estabelecimento "Teatro de magos"
                         :categoria       :lazer}})
 
-(def compra5 {:cliente {:cpf   30971065083
+(def compra3 {:cliente {:cpf   30971065083
                         :nome  "Alantar the Blue"
                         :email "alantar.blue@shire.com"}
               :cartao  {:numero   4050920705496483
                         :cvv      995
                         :validade "07/21"
                         :limite   650}
-              :compra  {:data            "2021-06-09T09:59:40.829"
+              :compra  {:data            "2021-05-09T09:59:40.829"
                         :valor           57.00
                         :estabelecimento "Livraria Arda"
                         :categoria       :estudo}})
 
-(def compra2 {:cliente {:cpf   14971065083
+(def compra4 {:cliente {:cpf   30971065083
+                        :nome  "Alantar the Blue"
+                        :email "alantar.blue@shire.com"}
+              :cartao  {:numero   4050920705496483
+                        :cvv      995
+                        :validade "07/21"
+                        :limite   650}
+              :compra  {:data            "2021-07-09T09:59:40.829"
+                        :valor           87.00
+                        :estabelecimento "Livraria Arda"
+                        :categoria       :estudo}})
+
+
+(def compra5 {:cliente {:cpf   14971065083
                         :nome  "Gandalf the Gray"
                         :email "gandalf.gray@shire.com"}
               :cartao  {:numero   5150920705496483
@@ -48,7 +61,7 @@
                         :estabelecimento "Mercadinho do Sauron"
                         :categoria       :alimentacao}})
 
-(def compra4 {:cliente {:cpf   24971065583
+(def compra6 {:cliente {:cpf   24971065583
                         :nome  "Radagast the Brown"
                         :email "radagast.brown@shire.com"}
               :cartao  {:numero   6050920705496483

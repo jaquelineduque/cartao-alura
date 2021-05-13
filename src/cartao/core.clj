@@ -27,8 +27,16 @@
       (c.logic/compras-mensais (.getMonth (LocalDateTime/now)))
       (c.logic/total-mensal)))
 
+(defn fatura-por-cliente
+  [cpf-cliente]
+  (-> (c.db/todas-as-compras)
+      (c.logic/compras-por-cliente cpf-cliente)
+      (c.logic/compras-mensais (.getMonth (LocalDateTime/now)))
+      (c.logic/total-mensal)))
+
+
 (println "Todas as compras" (todas-as-compras))
 (println "Gasto por categoria: " (gasto-por-categoria))
 (println "Compras no teatro de magos " (compras-por-estabelecimento "Teatro de magos"))
-
 (println "Total do mês atual" (faturas))
+(println "Fatura do Alantar no mês atual" (fatura-por-cliente 30971065083))

@@ -41,9 +41,12 @@
   [compras mes]
   (->> compras
        (map :compra)
-       (filter #(= (mes-da-data (:data %)) mes))
-       )
-  )
+       (filter #(= (mes-da-data (:data %)) mes))))
+
+(defn compras-por-cliente
+  [compras cpf]
+  (->> compras
+       (filter #(= (get-in % [:cliente :cpf]) cpf))))
 
 (defn total-mensal
   [compras]

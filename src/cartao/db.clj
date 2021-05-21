@@ -1,4 +1,137 @@
-(ns cartao.db)
+(ns cartao.db
+  (:require [datomic.api :as d])
+  (:use [clojure pprint]))
+
+(def db-uri "datomic:dev://localhost:4334/cartao")
+
+(def schema-compras [
+             ;Clientes
+             {:db/ident       :cliente/id
+              :db/valueType   :db.type/uuid
+              :db/cardinality :db.cardinality/one
+              :db/unique      :db.unique/identity
+              :db/doc         "id do cliente"}
+             {:db/ident       :cliente/cpf
+              :db/valueType   :db.type/string
+              :db/cardinality :db.cardinality/one
+              :db/doc         "CPF do cliente"}
+             {:db/ident       :cliente/nome
+              :db/valueType   :db.type/string
+              :db/cardinality :db.cardinality/one
+              :db/doc         "Nome do cliente"}
+             {:db/ident       :cliente/email
+              :db/valueType   :db.type/string
+              :db/cardinality :db.cardinality/one
+              :db/doc         "Email do cliente"}
+
+             ;cartão
+             {:db/ident       :cartao/id
+              :db/valueType   :db.type/uuid
+              :db/cardinality :db.cardinality/one
+              :db/unique      :db.unique/identity
+              :db/doc         "id do cartao"}
+             {:db/ident       :cartao/numero
+              :db/valueType   :db.type/string
+              :db/cardinality :db.cardinality/one
+              :db/doc         "Número do cartão"}
+             {:db/ident       :cartao/cvv
+              :db/valueType   :db.type/string
+              :db/cardinality :db.cardinality/one
+              :db/doc         "CVV"}
+             {:db/ident       :cartao/validade
+              :db/valueType   :db.type/string
+              :db/cardinality :db.cardinality/one
+              :db/doc         "Validade (MM/AA)"}
+             {:db/ident       :cartao/limite
+              :db/valueType   :db.type/bigdec
+              :db/cardinality :db.cardinality/one
+              :db/doc         "Limite"}
+             {:db/ident       :cartao/id-cliente
+              :db/valueType   :db.type/ref
+              :db/cardinality :db.cardinality/one
+              :db/doc         "id do cliente"}
+
+             ;compras
+             {:db/ident       :compra/id
+              :db/valueType   :db.type/uuid
+              :db/cardinality :db.cardinality/one
+              :db/unique      :db.unique/identity
+              :db/doc         "id da compra"}
+             {:db/ident       :compra/data
+              :db/valueType   :db.type/instant
+              :db/cardinality :db.cardinality/one
+              :db/doc         "Data da compra"}
+             {:db/ident       :compra/valor
+              :db/valueType   :db.type/bigdec
+              :db/cardinality :db.cardinality/one
+              :db/doc         "Valor da compra"}
+             {:db/ident       :compra/estabelecimento
+              :db/valueType   :db.type/string
+              :db/cardinality :db.cardinality/one
+              :db/doc         "Estabelecimento da compra"}
+             {:db/ident       :compra/categoria
+              :db/valueType   :db.type/keyword
+              :db/cardinality :db.cardinality/one
+              :db/doc         "Categoria da compra"}
+             {:db/ident       :compra/id-cartao
+              :db/valueType   :db.type/ref
+              :db/cardinality :db.cardinality/one
+              :db/doc         "id do cartão"}])
+
+(defn cria-schema!
+  [conn schema-compras]
+  (d/transact conn schema-compras))
+
+(defn abre-conexao!
+  []
+  (d/create-database db-uri)
+  (d/connect db-uri))
+
+(defn apaga-banco!
+  []
+  (d/delete-database db-uri))
+
+(defn adiciona-clientes!
+  [conn clientes]
+  (d/transact conn clientes))
+
+(defn adiciona-cartoes!
+  [conn cartoes]
+  (d/transact conn cartoes))
+
+(defn adiciona-compras!
+  [conn compras]
+  (d/transact conn compras))
+
+(defn retorna-clientes
+  [db]
+  (d/q '[:find (pull ?cliente [:cliente/id :cliente/cpf :cliente/nome :cliente/email])
+         :where [?cliente :cliente/id]] db))
+
+(defn retorna-cartoes
+  [db]
+  (d/q '[:find (pull ?cartao [:cartao/id :cartao/numero :cartao/cvv
+                              :cartao/validade :cartao/limite :cartao/id-cliente])
+         :where [?cartao :cartao/id]] db))
+
+(defn retorna-compras
+  [db]
+  (d/q '[:find (pull ?compra [:compra/id :compra/data :compra/valor
+                              :compra/estabelecimento :compra/categoria :compra/id-cartao])
+         :where [?compra :compra/id]] db))
+
+(defn retorna-compras-completa
+  [db]
+  (d/q '[:find (pull ?compra [ :compra/id :compra/data :compra/valor
+                              :compra/estabelecimento :compra/categoria {[:compra/id-cartao :as :compra/cartao] [[:cartao/id :as :compra/cartao] :cartao/numero :cartao/cvv
+                                                                                            :cartao/limite :cartao/validade
+                                                                                            {[:cartao/id-cliente :as :cartao/cliente] [
+                                                                                                                 :cliente/id
+                                                                                                                 :cliente/cpf
+                                                                                                                 :cliente/nome
+                                                                                                                 :cliente/email]}]
+                                                                          }])
+         :where [?compra :compra/id]] db))
 
 (def compra1 {:cliente {:cpf   14971065083
                         :nome  "Gandalf the Gray"
@@ -72,6 +205,7 @@
                         :valor           28.00
                         :estabelecimento "Teatro de magos"
                         :categoria       :lazer}})
+
 
 
 (defn todas-as-compras

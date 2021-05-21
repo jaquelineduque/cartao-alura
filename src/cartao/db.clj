@@ -123,7 +123,7 @@
 (defn retorna-compras-completa
   [db]
   (d/q '[:find (pull ?compra [ :compra/id :compra/data :compra/valor
-                              :compra/estabelecimento :compra/categoria {[:compra/id-cartao :as :compra/cartao] [[:cartao/id :as :compra/cartao] :cartao/numero :cartao/cvv
+                              :compra/estabelecimento :compra/categoria {[:compra/id-cartao :as :compra/cartao] [:cartao/id  :cartao/numero :cartao/cvv
                                                                                             :cartao/limite :cartao/validade
                                                                                             {[:cartao/id-cliente :as :cartao/cliente] [
                                                                                                                  :cliente/id

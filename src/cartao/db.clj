@@ -133,81 +133,105 @@
                                                                           }])
          :where [?compra :compra/id]] db))
 
-(def compra1 {:cliente {:cpf   14971065083
-                        :nome  "Gandalf the Gray"
-                        :email "gandalf.gray@shire.com"}
-              :cartao  {:numero   5150920705496483
-                        :cvv      999
-                        :validade "12/21"
-                        :limite   1000}
-              :compra  {:data            "2021-05-09T09:59:40.829"
-                        :valor           50.01
-                        :estabelecimento "Padoca da Rosinha"
-                        :categoria       :alimentacao}})
+(defn retorna-compras-por-cliente
+  [db]
+  (d/q '[:find ?id-cartao ?id-cliente (count ?id-compra)
+         :with ?compra
+         :keys cartao cliente quantidade-compra
+         :where [?compra :compra/id ?id-compra]
+                [?compra :compra/id-cartao ?id-cartao]
+                [?id-cartao :cartao/id-cliente ?id-cliente]]
+       db))
 
-(def compra2 {:cliente {:cpf   14971065083
-                        :nome  "Gandalf the Gray"
-                        :email "gandalf.gray@shire.com"}
-              :cartao  {:numero   5150920705496483
-                        :cvv      999
-                        :validade "12/21"
-                        :limite   1000}
-              :compra  {:data            "2021-05-21T09:59:40.829"
-                        :valor           28.97
-                        :estabelecimento "Teatro de magos"
-                        :categoria       :lazer}})
-
-(def compra3 {:cliente {:cpf   30971065083
-                        :nome  "Alantar the Blue"
-                        :email "alantar.blue@shire.com"}
-              :cartao  {:numero   4050920705496483
-                        :cvv      995
-                        :validade "07/21"
-                        :limite   650}
-              :compra  {:data            "2021-05-09T09:59:40.829"
-                        :valor           57.00
-                        :estabelecimento "Livraria Arda"
-                        :categoria       :estudo}})
-
-(def compra4 {:cliente {:cpf   30971065083
-                        :nome  "Alantar the Blue"
-                        :email "alantar.blue@shire.com"}
-              :cartao  {:numero   4050920705496483
-                        :cvv      995
-                        :validade "07/21"
-                        :limite   650}
-              :compra  {:data            "2021-07-09T09:59:40.829"
-                        :valor           87.00
-                        :estabelecimento "Livraria Arda"
-                        :categoria       :estudo}})
+;forma abaixo parece não ser a mais eficiente [diversas cláusulas no where]. Alguma alternativa?
+(defn retorna-compras-por-cliente
+  [db]
+  ;(d/q '[:find (pull ?id-cliente [:cliente/nome]) (pull ?id-compra [(count) :as :cliente/quantidade])
+   (d/q '[:find ?nome (count ?id-compra)
+         :with ?compra
+         :keys nome quantidade-compra
+         :where [?compra :compra/id ?id-compra]
+            [?compra :compra/id-cartao ?id-cartao]
+            [?id-cartao :cartao/id-cliente ?id-cliente]
+            [?id-cliente :cliente/nome ?nome]]
+       db))
 
 
-(def compra5 {:cliente {:cpf   14971065083
-                        :nome  "Gandalf the Gray"
-                        :email "gandalf.gray@shire.com"}
-              :cartao  {:numero   5150920705496483
-                        :cvv      999
-                        :validade "12/21"
-                        :limite   1000}
-              :compra  {:data            "2021-06-03T09:59:40.829"
-                        :valor           60.72
-                        :estabelecimento "Mercadinho do Sauron"
-                        :categoria       :alimentacao}})
+  (def compra1 {:cliente {:cpf   14971065083
+                          :nome  "Gandalf the Gray"
+                          :email "gandalf.gray@shire.com"}
+                :cartao  {:numero   5150920705496483
+                          :cvv      999
+                          :validade "12/21"
+                          :limite   1000}
+                :compra  {:data            "2021-05-09T09:59:40.829"
+                          :valor           50.01
+                          :estabelecimento "Padoca da Rosinha"
+                          :categoria       :alimentacao}})
 
-(def compra6 {:cliente {:cpf   24971065583
-                        :nome  "Radagast the Brown"
-                        :email "radagast.brown@shire.com"}
-              :cartao  {:numero   6050920705496483
-                        :cvv      998
-                        :validade "06/21"
-                        :limite   700}
-              :compra  {:data            "2021-06-08T09:59:40.829"
-                        :valor           28.00
-                        :estabelecimento "Teatro de magos"
-                        :categoria       :lazer}})
+  (def compra2 {:cliente {:cpf   14971065083
+                          :nome  "Gandalf the Gray"
+                          :email "gandalf.gray@shire.com"}
+                :cartao  {:numero   5150920705496483
+                          :cvv      999
+                          :validade "12/21"
+                          :limite   1000}
+                :compra  {:data            "2021-05-21T09:59:40.829"
+                          :valor           28.97
+                          :estabelecimento "Teatro de magos"
+                          :categoria       :lazer}})
+
+  (def compra3 {:cliente {:cpf   30971065083
+                          :nome  "Alantar the Blue"
+                          :email "alantar.blue@shire.com"}
+                :cartao  {:numero   4050920705496483
+                          :cvv      995
+                          :validade "07/21"
+                          :limite   650}
+                :compra  {:data            "2021-05-09T09:59:40.829"
+                          :valor           57.00
+                          :estabelecimento "Livraria Arda"
+                          :categoria       :estudo}})
+
+  (def compra4 {:cliente {:cpf   30971065083
+                          :nome  "Alantar the Blue"
+                          :email "alantar.blue@shire.com"}
+                :cartao  {:numero   4050920705496483
+                          :cvv      995
+                          :validade "07/21"
+                          :limite   650}
+                :compra  {:data            "2021-07-09T09:59:40.829"
+                          :valor           87.00
+                          :estabelecimento "Livraria Arda"
+                          :categoria       :estudo}})
+
+
+  (def compra5 {:cliente {:cpf   14971065083
+                          :nome  "Gandalf the Gray"
+                          :email "gandalf.gray@shire.com"}
+                :cartao  {:numero   5150920705496483
+                          :cvv      999
+                          :validade "12/21"
+                          :limite   1000}
+                :compra  {:data            "2021-06-03T09:59:40.829"
+                          :valor           60.72
+                          :estabelecimento "Mercadinho do Sauron"
+                          :categoria       :alimentacao}})
+
+  (def compra6 {:cliente {:cpf   24971065583
+                          :nome  "Radagast the Brown"
+                          :email "radagast.brown@shire.com"}
+                :cartao  {:numero   6050920705496483
+                          :cvv      998
+                          :validade "06/21"
+                          :limite   700}
+                :compra  {:data            "2021-06-08T09:59:40.829"
+                          :valor           28.00
+                          :estabelecimento "Teatro de magos"
+                          :categoria       :lazer}})
 
 
 
-(defn todas-as-compras
-  []
-  [compra1 compra2 compra3 compra4 compra5])
+  (defn todas-as-compras
+    []
+    [compra1 compra2 compra3 compra4 compra5])

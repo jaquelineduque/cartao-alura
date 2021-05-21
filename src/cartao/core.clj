@@ -28,13 +28,24 @@
 ;adiciona compras no banco
 (def compra1 (c.model/nova-compra [:cartao/id (:cartao/id cartao-do-gandalf)] (clojure.instant/read-instant-date "2021-05-09T09:59:40.829") 50.01M "Padoca da Rosinha" :alimentacao))
 (def compra2 (c.model/nova-compra [:cartao/id (:cartao/id cartao-do-gandalf)] (clojure.instant/read-instant-date "2021-05-21T09:59:40.829") 28.97M "28.97" :lazer))
-(c.db/adiciona-compras! conn [compra1 compra2])
-
-
+(def compra3 (c.model/nova-compra [:cartao/id (:cartao/id cartao-do-alantar)] (clojure.instant/read-instant-date "2021-05-21T10:59:40.829") 10.97M "10.97" :lazer))
+(c.db/adiciona-compras! conn [compra1 compra2 compra3])
+(c.db/adiciona-compras! conn [compra3])
 ;retorna compras com todos os dados.
 (println "Todas as compras")
-(pprint (c.db/retorna-compras-completa (d/db conn)))
+(c.db/retorna-compras-completa (d/db conn))
 
+;retorna quantidades de compra por pessoa.
+(c.db/retorna-compras-por-cliente (d/db conn))
+(println "Cliente com mais compras" (apply max-key (c.db/retorna-compras-por-cliente (d/db conn))))
+
+;(def compraz (ffirst (c.db/retorna-compras-completa (d/db conn))))
+;
+;(ffirst (c.db/retorna-compras-completa (d/db conn)))
+;(:compra/valor compraz) ; obtendo o valor da compra
+;(:cartao/numero (:compra/cartao compraz))                   ;obtendo o número do cartão
+
+(println (chave-valor compra))
 ;implementar metodos abaixo com base no db tb
 ;(defn todas-as-compras
 ;  []

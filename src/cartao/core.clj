@@ -39,6 +39,9 @@
 (c.db/retorna-compras-por-cliente (d/db conn))
 (println "Cliente com mais compras" (apply max-key (c.db/retorna-compras-por-cliente (d/db conn))))
 
+(c.db/retorna-compras-mais-cara (d/db conn))
+(println "Compra mais cara" (c.db/retorna-compras-mais-cara (d/db conn)))
+
 ;(def compraz (ffirst (c.db/retorna-compras-completa (d/db conn))))
 ;
 ;(ffirst (c.db/retorna-compras-completa (d/db conn)))

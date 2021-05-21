@@ -156,6 +156,27 @@
             [?id-cliente :cliente/nome ?nome]]
        db))
 
+;(defn retorna-compras-mais-cara
+;  [db]
+;  (d/q '[:find (pull ?compra [*])
+;         :where [(q '[:find (max ?valor)
+;                      :where [_ :compra/valor ?valor]]
+;                    $) [[?valor]]]
+;         [?compra :compra/valor ?valor]]
+;       db))
+
+(defn retorna-compras-mais-cara
+  [db]
+  (d/q '[:find ?nome ?valor
+         :keys nome valor
+         :where [(q '[:find (max ?valor)
+                      :where [_ :compra/valor ?valor]]
+                    $) [[?valor]]]
+         [?compra :compra/valor ?valor]
+         [?compra :compra/id-cartao ?id-cartao]
+         [?id-cartao :cartao/id-cliente ?id-cliente]
+         [?id-cliente :cliente/nome ?nome]]
+       db))
 
   (def compra1 {:cliente {:cpf   14971065083
                           :nome  "Gandalf the Gray"

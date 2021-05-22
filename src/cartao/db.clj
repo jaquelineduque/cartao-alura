@@ -178,6 +178,18 @@
          [?id-cliente :cliente/nome ?nome]]
        db))
 
+(defn clientes-sem-compra
+  [db]
+  (d/q '[:find ?nome
+         :keys nome
+         :where
+         [?cartao :cartao/id-cliente ?cliente]
+         [?cliente :cliente/nome ?nome]
+         (not [_ :compra/id-cartao ?cartao])
+         ]
+       db))
+
+
   (def compra1 {:cliente {:cpf   14971065083
                           :nome  "Gandalf the Gray"
                           :email "gandalf.gray@shire.com"}

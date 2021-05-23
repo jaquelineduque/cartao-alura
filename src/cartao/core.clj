@@ -45,6 +45,9 @@
 (c.db/clientes-sem-compra (d/db conn))
 (println "Clientes sem compra" (c.db/clientes-sem-compra (d/db conn)))
 
+(c.db/retorna-gasto-por-categoria (d/db conn))
+(println "Gasto por categoria" (c.db/retorna-gasto-por-categoria (d/db conn)))
+
 ;(def compraz (ffirst (c.db/retorna-compras-completa (d/db conn))))
 ;
 ;(ffirst (c.db/retorna-compras-completa (d/db conn)))

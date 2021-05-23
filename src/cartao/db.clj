@@ -143,6 +143,7 @@
                 [?id-cartao :cartao/id-cliente ?id-cliente]]
        db))
 
+
 ;forma abaixo parece não ser a mais eficiente [diversas cláusulas no where]. Alguma alternativa?
 (defn retorna-compras-por-cliente
   [db]
@@ -154,6 +155,17 @@
             [?compra :compra/id-cartao ?id-cartao]
             [?id-cartao :cartao/id-cliente ?id-cliente]
             [?id-cliente :cliente/nome ?nome]]
+       db))
+
+(defn retorna-gasto-por-categoria
+  [db]
+  ;(d/q '[:find (pull ?id-cliente [:cliente/nome]) (pull ?id-compra [(count) :as :cliente/quantidade])
+  (d/q '[:find ?categoria (sum ?valor)
+         :with ?compra
+         :keys nome quantidade-compra
+         :where [?compra :compra/id ?id-compra]
+         [?compra :compra/valor ?valor]
+         [?compra :compra/categoria ?categoria]]
        db))
 
 ;(defn retorna-compras-mais-cara

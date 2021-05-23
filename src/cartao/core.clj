@@ -48,6 +48,10 @@
 (c.db/retorna-gasto-por-categoria (d/db conn))
 (println "Gasto por categoria" (c.db/retorna-gasto-por-categoria (d/db conn)))
 
+(c.db/compras-por-estabelecimento (d/db conn) "Padoca da Rosinha")
+(c.db/compras-por-estabelecimento (d/db conn) "Teatro dos magos")
+(println "Compras no Teatro dos magos" (c.db/compras-por-estabelecimento (d/db conn) "Teatro dos magos"))
+
 ;(def compraz (ffirst (c.db/retorna-compras-completa (d/db conn))))
 ;
 ;(ffirst (c.db/retorna-compras-completa (d/db conn)))

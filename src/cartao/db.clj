@@ -201,6 +201,15 @@
          ]
        db))
 
+(defn compras-por-estabelecimento
+  [db estabelecimento]
+  (d/q '[:find (pull ?compra [:compra/id :compra/data :compra/valor
+                              :compra/estabelecimento :compra/categoria])
+         :in $ ?estabelecimento
+         :where [?compra :compra/id ?id-compra]
+         [?compra :compra/estabelecimento ?estabelecimento]]
+       db estabelecimento))
+
 
   (def compra1 {:cliente {:cpf   14971065083
                           :nome  "Gandalf the Gray"

@@ -1,6 +1,7 @@
 (ns cartao.db
   (:require [datomic.api :as d])
-  (:use [clojure pprint]))
+  (:use [clojure pprint])
+  (:import [java.time LocalDate]))
 
 (def db-uri "datomic:dev://localhost:4334/cartao")
 
@@ -210,6 +211,54 @@
          [?compra :compra/estabelecimento ?estabelecimento]]
        db estabelecimento))
 
+;(defn mesmo-mes
+;  [mes]
+;  (= mes (.getMonth (LocalDateTime/parse ?data-compra)))
+;  )
+
+;(defn retorna-compras-mais-cara
+;  [db]
+;  (d/q '[:find ?nome ?valor
+;         :keys nome valor
+;         :where [(q '[:find (max ?valor)
+;                      :where [_ :compra/valor ?valor]]
+;                    $) [[?valor]]]
+;         [?compra :compra/valor ?valor]
+;         [?compra :compra/id-cartao ?id-cartao]
+;         [?id-cartao :cartao/id-cliente ?id-cliente]
+;         [?id-cliente :cliente/nome ?nome]]
+;       db))
+
+(defn mes-da-data [data]
+  (.getMonth data))
+
+(defn compras-por-mes
+  [db mes]
+  (d/q '[:find ?data ?mes-base ?mes
+         :in $ ?mes
+         :keys data mes-base mes-consulta
+         :where [?compra :compra/data ?data]
+         ;[(= :lazer ?categoria)]
+         ;[?compra :compra/data ?data-compra]
+         ;[(q '[:find ?data-compra
+         ;              :where [?compra :compra/data ?data-compra]]
+         ;              $) [[?data-compra]]]
+         ;[(.after ^java.util.Date ?data ?data)]
+         ;[(.getMonth ^java.util.Date ?data) ?mes-base]
+         [(.getMonthValue ^java.time.LocalDate ?data) ?mes-base]
+         ;[(= ?mes ?mes-base)]^
+         ;[(= ?mes (mes-da-data ?categoria))]
+         ]
+       db mes))
+
+
+  ;(d/q '[:find ?data-compra
+  ;       :in $ ?mes
+  ;       :where [?compra :compra/data ?data-compra]
+  ;       ;[(LocalDateTime/parse ?data-compra) ?data]
+  ;       ;[(= ?mes (.getMonth ?data-compra))]
+  ;       ]
+  ;     db mes))
 
   (def compra1 {:cliente {:cpf   14971065083
                           :nome  "Gandalf the Gray"

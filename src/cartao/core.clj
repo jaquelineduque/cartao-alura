@@ -3,7 +3,8 @@
     ;[cartao.logic :as c.logic]
             [cartao.model :as c.model]
             [datomic.api :as d])
-  (:import [java.time LocalDateTime])
+  (:import [java.time LocalDateTime]
+           [java.util Calendar])
   (:use [clojure pprint]))
 
 ;(c.db/apaga-banco!)
@@ -52,13 +53,17 @@
 (c.db/compras-por-estabelecimento (d/db conn) "Teatro dos magos")
 (println "Compras no Teatro dos magos" (c.db/compras-por-estabelecimento (d/db conn) "Teatro dos magos"))
 
+
+
+;(c.db/compras-por-mes (d/db conn) (.getMonth (LocalDateTime/now)))
+
+
 ;(def compraz (ffirst (c.db/retorna-compras-completa (d/db conn))))
 ;
 ;(ffirst (c.db/retorna-compras-completa (d/db conn)))
 ;(:compra/valor compraz) ; obtendo o valor da compra
 ;(:cartao/numero (:compra/cartao compraz))                   ;obtendo o número do cartão
 
-(println (chave-valor compra))
 ;implementar metodos abaixo com base no db tb
 ;(defn todas-as-compras
 ;  []
